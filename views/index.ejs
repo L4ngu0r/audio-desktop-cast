@@ -1,0 +1,94 @@
+<!-- views/index.ejs -->
+
+<!doctype html>
+<html>
+<head>
+    <title>Audio Cast Desktop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+</head>
+<body style="width: 520px;">
+
+<div class="jumbotron" style="background: none;text-align: center;">
+    <div class="container" style="max-width: 480px;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">CMD</a></li>
+            <li><a data-toggle="tab" href="#menu2">STATUS</a></li>
+            <li><a data-toggle="tab" href="#menu3">CONSOLE</a></li>
+            <li><a data-toggle="tab" href="#menu4">ABOUT</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <div>
+                    <form method="post" action="/play">
+                        <div>
+                            <p>Title :</p>
+                            <input type="text" name="title"/>
+                        </div>
+                        <div>
+                            <p>Url to play :</p>
+                            <input type="text" id="inputUrl" name="inputUrl"/>
+                        </div>
+                        <div>
+                            <p>Media type (mimetype)</p>
+                            <select id="typeSelect" name="typeSelect">
+                                <option value="audio/mpeg" name="mpeg" selected>audio/mpeg</option>
+                                <option value="audio/mp3" name="mp3">audio/mp3</option>
+                                <option value="audio/ogg" name="ogg">audio/ogg</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input class="btn btn-default" type="submit" value="Play" style="width:211px;"/>
+                        </div>
+                    </form>
+                    <div>
+                        <p>
+                            <a class="btn btn-default" href="/pause" role="button">Pause</a>
+                            <a class="btn btn-default" href="/resume" role="button">Resume</a>
+                            <a class="btn btn-default" href="/stop" role="button">Stop</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <div id="status"></div>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <% if (message.length > 0) { %>
+                <p>Console : </p>
+                <div>
+                    <pre id="preConsole" style="font-family: Courier;color: #CCCCCC;background: #000000;padding: 10px;"><%= message %></pre>
+                </div>
+                <% } %>
+            </div>
+            <div id="menu4" class="tab-pane fade">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var socket = io();
+    socket.on('updateStatus', function (data) {
+        if(data){
+            document.getElementById("preConsole").textContent = JSON.stringify(data.status, null, 2);
+            document.getElementById("status").innerHTML = "<p>Content id : " + data.contentId + "</p>" +
+                    "<p>Content type : " + data.contentType + "</p>" +
+                    "<p>Player state : " + data.playerState + " </p>" +
+                    "<p>Repeat mode : " + data.repeatMode + " </p>" +
+                    "<p>Volume level : " + data.volumeLevel + " </p>";
+        }
+        console.log(data);
+    });
+
+    socket.on('disconnect', function () {
+        ocument.getElementById("status").innerHTML = 'Disconnected.';
+    });
+</script>
+</body>
+</html>

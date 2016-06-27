@@ -1,0 +1,16 @@
+{
+  "name": "desktop-audio-cast",
+  "version": "1.0.0",
+  "author": "L4ngu0r",
+  "private": true,
+  "dependencies": {
+    "chromecasts": "~1.8.0",
+    "express": "~4.9.4",
+    "ejs":"~1.0.0",
+    "body-parser":"~1.15.0",
+    "connect-flash":"~0.1.1",
+    "express-session": "~1.8.2",
+    "socket.io": "~1.4.6"
+  },
+  "license": "MIT"
+}
